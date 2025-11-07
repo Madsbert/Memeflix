@@ -20,13 +20,20 @@ public class APIController :ControllerBase
     [HttpPost("uploadMovie")]
     public async Task<IActionResult> UploadMovieAsync([FromForm] MovieUploadModel file)
     {
-        if (file == null || file.Moviefile.Length == 0)
+        if (!ModelState.IsValid)
         {
-           return BadRequest("No file provided");
+            return BadRequest(ModelState);
         }
-        
-        var fileId = await _movieService.UploadMovieAsync(file.Moviefile);
-        return Ok(fileId);
+    
+        try
+        {
+            var fileId = await _movieService.UploadMovieAsync(file);
+            return Ok(new { FileId = fileId.ToString() });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
     
 }

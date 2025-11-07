@@ -1,19 +1,15 @@
-﻿namespace Memeflix.____Domain;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Memeflix.____Domain;
 
 public class MovieUploadModel
 {
+    [Required]
     public IFormFile Moviefile{get;set;}
+    [Required]
     public string Title{get;set;}
+    [Required]
     public Genre Genre{get;set;}
-    
-    public string Description{get;set;}
-
-    public MovieUploadModel(IFormFile moviefile, string title, Genre genre,  string description)
-    {
-        Moviefile = moviefile;
-        Title = title;
-        Genre = genre;
-        Description = description;
-        
-    }
+    [Required]
+    public string Description { get; set; }
 }
