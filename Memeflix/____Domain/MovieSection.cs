@@ -3,15 +3,8 @@ using MongoDB.Bson;
 
 namespace Memeflix.____Domain;
 
-public class MovieSection : IMovieService
+public class MovieSection
 {
-    public Task<ObjectId> UploadMovieAsync(IFormFile file)
-    {
-        throw new NotImplementedException();
-    }
 
-    public Task<byte[]> DownloadMovieAsync(ObjectId fileId)
-    {
-        throw new NotImplementedException();
-    }
+    
 }

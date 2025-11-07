@@ -3,7 +3,7 @@ using MongoDB.Bson;
 
 namespace Memeflix.___Application.Services;
 
-public class MovieSection : IMovieService
+public class MovieService : IMovieService
 {
     public Task<ObjectId> UploadMovieAsync(IFormFile file)
     {
