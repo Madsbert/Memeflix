@@ -64,4 +64,13 @@ public class MovieRepo : IMovieRepo
     {
         throw new NotImplementedException();
     }
+    
+    // Get file information (metadata)
+    public async Task<GridFSFileInfo> GetFileInfoAsync(ObjectId fileId)
+    {
+        var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", fileId);
+        var fileInfo = await _gridFSBucket.Find(filter).FirstOrDefaultAsync();
+        return fileInfo;
+    }
+    
 }
