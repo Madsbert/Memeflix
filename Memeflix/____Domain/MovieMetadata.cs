@@ -5,75 +5,34 @@ namespace Memeflix.____Domain;
 
 public class MovieMetadata
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    private string _index;
-    
-    private string _filename;
-    private DateTime _uploadDate;
-    private string _description;
-    private long _duration;
-    private Genre _genre;
-    private int _chunkSize;
-    private Dictionary<string,object> _metadata;
-    public string Index
-    {
-        get { return _index; }
-        set { _index = value; }
-    }
+    [field: BsonId]
+    [field: BsonRepresentation(BsonType.ObjectId)]
+    public string Index { get; set; }
 
-    public string FileName
-    {
-        get { return _filename; }
-        set { _filename = value; }
-    }
+    public string FileName { get; set; }
 
-    public DateTime UploadDate
-    {
-        get { return _uploadDate; }
-        set { _uploadDate = value; }
-    }
+    public DateTime UploadDate { get; set; }
 
-    
-    public string Description
-    {
-        get { return _description; }
-        set { _description = value; }
-    }
 
-    public long Duration
-    {
-        get { return _duration; }
-        set { _duration = value; }
-    }
+    public string Description { get; set; }
 
-    public Genre Genre
-    {
-        get { return _genre; }
-        set { _genre = value; }
-    }
+    public long Duration { get; set; }
 
-    public int ChunkSize
-    {
-        get { return _chunkSize; }
-        set { _chunkSize = value; }
-    }
+    public Genre Genre { get; set; }
 
-    public Dictionary<string, object> Metadata
-    {
-        get { return _metadata; }
-        set { _metadata = value; }
-    }
+    public int ChunkSize { get; set; }
+
+    public Dictionary<string, object> Metadata { get; set; }
 
     public MovieMetadata(string index, string filename, DateTime uploadDate, string description, long duration, Genre genre, int chunkSize, Dictionary<string, object> metadata)
     {
-        _index = index;
-        _filename = filename;
-        _uploadDate = uploadDate;
-        _description = description;
-        _duration = duration;
-        _genre = genre;
-        _chunkSize = chunkSize;
-        _metadata = metadata;
+        Index = index;
+        FileName = filename;
+        UploadDate = uploadDate;
+        Description = description;
+        Duration = duration;
+        Genre = genre;
+        ChunkSize = chunkSize;
+        Metadata = metadata;
     }
 }
