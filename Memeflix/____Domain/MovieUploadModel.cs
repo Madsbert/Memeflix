@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace Memeflix.____Domain;
-
+/// <summary>
+/// a domain class for the movieupload - the informatino needed to import a movie to the database
+/// </summary>
 public class MovieUploadModel
 {
     [Required]

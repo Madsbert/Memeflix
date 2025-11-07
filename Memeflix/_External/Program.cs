@@ -16,10 +16,14 @@ builder.Services.AddSwaggerGen();
 var mongoConn = builder.Configuration.GetConnectionString("MongoDB");
 var mongoClient = new MongoClient(mongoConn);
 var mongoDatabase = mongoClient.GetDatabase("MemeflixDb");
+// Register MongoDB services with dependency injection container
 builder.Services.AddSingleton<IMongoClient>(mongoClient);
 builder.Services.AddSingleton(mongoDatabase);
+
+// Register GridFS bucket for file storage operations
 builder.Services.AddSingleton<IGridFSBucket>(sp => new GridFSBucket(sp.GetRequiredService<IMongoDatabase>()));
 
+// Register application-specific services with scoped lifetime
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IMovieRepo, MovieRepo>();
 

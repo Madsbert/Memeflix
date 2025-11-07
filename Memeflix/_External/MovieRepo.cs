@@ -20,6 +20,19 @@ public class MovieRepo : IMovieRepo
         _gridFSBucket = new GridFSBucket(database);
     }
 
+    /// <summary>
+    /// Uploads a file to GridFS storage with associated movie metadata
+    /// </summary>
+    /// <param name="filename">The name to assign to the uploaded file</param>
+    /// <param name="stream">Stream containing the file data to be uploaded</param>
+    /// <param name="metadata">Movie metadata containing descriptive information and file details</param>
+    /// <remarks>
+    /// This method performs the following operations:
+    /// 1. Creates GridFS upload options with movie metadata converted to BSON format
+    /// 2. Uploads the file stream to GridFS bucket storage
+    /// 3. Returns the unique identifier assigned by GridFS to the uploaded file
+    /// The metadata is stored as part of the GridFS file document for easy querying and retrieval.
+    /// </remarks>
     public async Task<ObjectId> UploadFileAsync(string filename, Stream stream, MovieMetadata metadata)
     {
         var options = new GridFSUploadOptions
