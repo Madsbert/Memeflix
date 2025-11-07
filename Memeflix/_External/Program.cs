@@ -19,6 +19,7 @@ var mongoDatabase = mongoClient.GetDatabase("MemeflixDb");
 builder.Services.AddSingleton<IMongoClient>(mongoClient);
 builder.Services.AddSingleton(mongoDatabase);
 builder.Services.AddSingleton<IGridFSBucket>(sp => new GridFSBucket(sp.GetRequiredService<IMongoDatabase>()));
+
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IMovieRepo, MovieRepo>();
 

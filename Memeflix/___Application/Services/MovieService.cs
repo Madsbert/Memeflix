@@ -38,13 +38,11 @@ public class MovieService : IMovieService
         return await _movieRepo.UploadFileAsync(file.Title, stream, metadata);
     }
 
-    public Task<ObjectId> UploadMovieAsync(IFormFile file)
+    public async Task<Stream> DownloadMovieStreamAsync(ObjectId fileId)
     {
-        throw new NotImplementedException();
-    }
+        if (fileId == ObjectId.Empty)
+            throw new ArgumentException("Invalid fileId", nameof(fileId));
 
-    public Task<byte[]> DownloadMovieAsync(ObjectId fileId)
-    {
-        throw new NotImplementedException();
+        return await _movieRepo.OpenDownloadStreamAsync(fileId);
     }
 }

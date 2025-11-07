@@ -2,6 +2,7 @@
 using Memeflix.___Application.Interfaces;
 using Memeflix.__Gateway;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace Memeflix._External.API;
 
@@ -36,4 +37,24 @@ public class APIController :ControllerBase
         }
     }
     
+    [HttpGet("downloadMovie/{fileId}")]
+    public async Task<IActionResult> DownloadMovieAsync(string fileId)
+    {
+        if (!ObjectId.TryParse(fileId, out ObjectId id))
+            return BadRequest("Invalid file Id");
+
+        try
+        {
+            var stream = await _movieService.DownloadMovieStreamAsync(id);
+            if (stream == null)
+                return NotFound("File not found");
+
+           
+            return File(stream, "video/mp4", enableRangeProcessing: true);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 }

@@ -35,6 +35,13 @@ public class MovieRepo : IMovieRepo
         return await _gridFSBucket.UploadFromStreamAsync(filename, stream, options);
     }
     
+    public async Task<Stream> OpenDownloadStreamAsync(ObjectId fileId)
+    {
+        var downloadStream = await _gridFSBucket.OpenDownloadStreamAsync(fileId);
+        return downloadStream;
+    }
+    
+    
     public Task<Stream> DownloadFileAsync(ObjectId fileId)
     {
         throw new NotImplementedException();
