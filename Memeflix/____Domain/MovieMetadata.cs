@@ -2,7 +2,9 @@
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Memeflix.____Domain;
-
+/// <summary>
+/// a domain class for det moviemeta data 
+/// </summary>
 public class MovieMetadata
 {
     [field: BsonId]
