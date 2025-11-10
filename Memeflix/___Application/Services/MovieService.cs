@@ -3,6 +3,7 @@ using Memeflix.____Domain;
 using Memeflix.___Application.Interfaces;
 using Memeflix.__Gateway;
 using MongoDB.Bson;
+using MongoDB.Driver.GridFS;
 
 namespace Memeflix.___Application.Services;
 
@@ -32,7 +33,7 @@ public class MovieService : IMovieService
         var movieFile = file.Moviefile; 
         
         if (movieFile == null || movieFile.Length == 0)
-        {
+                 {
             throw new ArgumentNullException(nameof(file));
         }
         
@@ -58,5 +59,10 @@ public class MovieService : IMovieService
             throw new ArgumentException("Invalid fileId", nameof(fileId));
 
         return await _movieRepo.OpenDownloadStreamAsync(fileId);
+    }
+
+    public async Task<List<MovieMetadata>> GetAllMovies()
+    {
+        return await _movieRepo.GetAllFilesAsync();
     }
 }

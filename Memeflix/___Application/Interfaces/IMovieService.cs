@@ -1,5 +1,6 @@
 ﻿using Memeflix.____Domain;
 using MongoDB.Bson;
+using MongoDB.Driver.GridFS;
 
 namespace Memeflix.___Application.Interfaces;
 /// <summary>
@@ -15,5 +16,8 @@ public interface IMovieService
     /// <returns></returns>
     Task<ObjectId> UploadMovieAsync(MovieUploadModel file);
     Task<Stream> DownloadMovieStreamAsync(ObjectId fileId);
+
+    Task<List<MovieMetadata>> GetAllMovies();
     
+
 }

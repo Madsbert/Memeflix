@@ -1,5 +1,6 @@
 ﻿using Memeflix.____Domain;
 using Memeflix.__Gateway;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
@@ -65,9 +66,23 @@ public class MovieRepo : IMovieRepo
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<MovieMetadata>> GetAllFilesAsync()
+    public async Task<List<MovieMetadata>> GetAllFilesAsync()
     {
-        throw new NotImplementedException();
+        List<GridFSFileInfo> files = await _gridFSBucket.Find(FilterDefinition<GridFSFileInfo>.Empty)
+            .ToListAsync();
+
+        var result = files.Select(f => new MovieMetadata(
+            index: f.Id.ToString(),
+            filename: f.Filename,
+            uploadDate: f.UploadDateTime,
+            description: f.Metadata?.GetValue("description", "No description")?.ToString() ?? "No description",
+            duration: f.Length,
+            genre: ParseGenre(f.Metadata?.GetValue("genre", "Unknown")?.ToString()),
+            chunkSize: f.ChunkSizeBytes,
+            metadata: f.Metadata?.ToDictionary() ?? new Dictionary<string, object>()
+        )).ToList();
+    
+        return result;
     }
 
     public Task<bool> DeleteFileAsync(ObjectId fileId)
@@ -92,5 +107,16 @@ public class MovieRepo : IMovieRepo
         var fileInfo = await _gridFSBucket.Find(filter).FirstOrDefaultAsync();
         return fileInfo;
     }
+    
+    private Genre ParseGenre(string genreString)
+    {
+        if (string.IsNullOrEmpty(genreString))
+            return Genre.Unknown;
+    
+        return Enum.TryParse<Genre>(genreString, true, out var genre) 
+            ? genre 
+            : Genre.Unknown;
+    }
+
     
 }

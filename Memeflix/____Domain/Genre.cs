@@ -8,5 +8,6 @@ public enum Genre
     Romance,
     Comedy,
     ScienceFiction,
-    Action
+    Action,
+    Unknown
 }

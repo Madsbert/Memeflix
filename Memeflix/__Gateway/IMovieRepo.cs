@@ -1,5 +1,6 @@
 ﻿using Memeflix.____Domain;
 using MongoDB.Bson;
+using MongoDB.Driver.GridFS;
 
 namespace Memeflix.__Gateway;
 /// <summary>
@@ -18,10 +19,8 @@ public interface IMovieRepo
     Task<Stream> DownloadFileAsync(ObjectId fileId);
     Task<Stream> OpenDownloadStreamAsync(ObjectId fileId);
     Task<MovieMetadata> GetFileMetadataAsync(ObjectId fileId);
-    Task<IEnumerable<MovieMetadata>> GetAllFilesAsync();
+    Task<List<MovieMetadata>> GetAllFilesAsync();
     Task<bool> DeleteFileAsync(ObjectId fileId);
     Task<bool> FileExistsAsync(string filename);
     Task<long> GetFileSizeAsync(ObjectId fileId);
-    
-    
 }

@@ -57,4 +57,18 @@ public class APIController :ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+    
+    [HttpGet("list")]
+    public async Task<IActionResult> GetVideoList()
+    {
+        try
+        {
+            var files = await _movieService.GetAllMovies();
+            return Ok(files);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error retrieving video list: {ex.Message}");
+        }
+    }
 }

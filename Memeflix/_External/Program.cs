@@ -37,6 +37,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Serve static files (HTML, CSS, JS)
+app.UseStaticFiles();
+
+app.UseDefaultFiles();
+
+// Fallback to serve index.html for root URL
+app.MapFallbackToFile("index.html");
 app.UseAuthorization();
 app.MapControllers();
 
