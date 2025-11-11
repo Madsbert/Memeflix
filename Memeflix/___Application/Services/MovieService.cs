@@ -29,18 +29,19 @@ public class MovieService : IMovieService
     /// </remarks>
     public async Task<ObjectId> UploadMovieAsync(MovieUploadModel file)
     {
-        
-        var movieFile = file.Moviefile; 
-        
+
+        var movieFile = file.Moviefile;
+
         if (movieFile == null || movieFile.Length == 0)
-                 {
+        {
             throw new ArgumentNullException(nameof(file));
         }
-        
+
         using var stream = movieFile.OpenReadStream();
         var metadata = new MovieMetadata(
             index: ObjectId.GenerateNewId().ToString(),
             filename: movieFile.FileName,
+            title: file.Title,
             uploadDate: DateTime.Now,
             description: file.Description,
             duration: 0,
@@ -59,6 +60,14 @@ public class MovieService : IMovieService
             throw new ArgumentException("Invalid fileId", nameof(fileId));
 
         return await _movieRepo.OpenDownloadStreamAsync(fileId);
+    }
+
+    public async Task<MovieMetadata> GetMovieMetadataAsync(ObjectId fileId)
+    {
+        if (fileId == ObjectId.Empty)
+            throw new ArgumentException("Invalid fileId", nameof(fileId));
+
+        return await _movieRepo.GetFileMetadataAsync(fileId);
     }
 
     public async Task<List<MovieMetadata>> GetAllMovies()

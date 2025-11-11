@@ -44,6 +44,12 @@
         <div class="loading">Choose a video to play</div>
     </div>
 
+    <div>
+        <p id="videoLength">Længde</p>
+        <p id="videoGenre">Genre</p>
+        <p id="videoDescription">Beskrivelse</p>
+    </div>
+
     <script>
         const API_BASE = '/api/API';
 
@@ -61,7 +67,7 @@
                     console.log(video.filename);
                     const option = document.createElement('option');
                     option.value = video.index;
-                    option.textContent = video.fileName;
+                    option.textContent = video.title;
                     dropdown.appendChild(option);
                 });
             })
@@ -75,6 +81,23 @@
          */
         function playVideo(fileId) {
             if (!fileId) return;
+
+            const lengthElement = document.getElementById('videoLength');
+            const genreElement = document.getElementById('videoGenre');
+            const descriptionElement = document.getElementById('videoDescription');
+
+            // Fetch video metadata from the API
+            fetch(`${API_BASE}/getMovieMetaData/${fileId}`)
+                .then(response => response.json())
+                .then(metadata => {
+                    lengthElement.textContent = `Længde: ${metadata.duration} sekunder`;
+                    genreElement.textContent = `Genre: ${metadata.genre}`;
+                    descriptionElement.textContent = `Beskrivelse: ${metadata.description}`;
+                })
+                .catch(error => {
+                    console.error('Error fetching video metadata:', error);
+                });
+
 
             // Construct the full URL for the video file by encoding the filename
             // encodeURIComponent ensures special characters in filenames are handled properly

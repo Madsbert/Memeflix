@@ -7,11 +7,11 @@ namespace Memeflix.____Domain;
 public class MovieUploadModel
 {
     [Required]
-    public IFormFile Moviefile{get;set;}
+    public IFormFile Moviefile { get; set; }
     [Required]
-    public string Title{get;set;}
+    public string Title { get; set; }
     [Required]
-    public Genre Genre{get;set;}
+    public string Genre { get; set; }
     [Required]
     public string Description { get; set; }
 }

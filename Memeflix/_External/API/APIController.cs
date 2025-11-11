@@ -2,6 +2,7 @@
 using Memeflix.___Application.Interfaces;
 using Memeflix.__Gateway;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Extensions;
 using MongoDB.Bson;
 
 namespace Memeflix._External.API;
@@ -30,6 +31,26 @@ public class APIController : ControllerBase
         {
             var fileId = await _movieService.UploadMovieAsync(file);
             return Ok(new { FileId = fileId.ToString() });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpGet("getMovieMetaData/{fileId}")]
+    public async Task<IActionResult> GetMovieMetaData(string fileId)
+    {
+        if (!ObjectId.TryParse(fileId, out ObjectId id))
+            return BadRequest("Invalid file Id");
+
+        try
+        {
+            var metadata = await _movieService.GetMovieMetadataAsync(id);
+            if (metadata == null)
+                return NotFound("File not found");
+
+            return Ok(metadata);
         }
         catch (Exception ex)
         {

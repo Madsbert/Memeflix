@@ -64,9 +64,23 @@ public class MovieRepo : IMovieRepo
         throw new NotImplementedException();
     }
 
-    public Task<MovieMetadata> GetFileMetadataAsync(ObjectId fileId)
+    public async Task<MovieMetadata> GetFileMetadataAsync(ObjectId fileId)
     {
-        throw new NotImplementedException();
+        var fileInfo = await GetFileInfoAsync(fileId);
+        if (fileInfo == null)
+            return null;
+
+        return new MovieMetadata(
+            index: fileInfo.Id.ToString(),
+            filename: fileInfo.Filename,
+            title: fileInfo.Metadata?.GetValue("title", "No title")?.ToString() ?? "No title",
+            uploadDate: fileInfo.UploadDateTime,
+            description: fileInfo.Metadata?.GetValue("description", "No description")?.ToString() ?? "No description",
+            duration: fileInfo.Length,
+            genre: fileInfo.Metadata?.GetValue("genre", "Unknown")?.ToString(),
+            chunkSize: fileInfo.ChunkSizeBytes,
+            metadata: fileInfo.Metadata?.ToDictionary() ?? new Dictionary<string, object>()
+        );
     }
 
     public async Task<List<MovieMetadata>> GetAllFilesAsync()
@@ -77,10 +91,11 @@ public class MovieRepo : IMovieRepo
         var result = files.Select(f => new MovieMetadata(
             index: f.Id.ToString(),
             filename: f.Filename,
+            title: f.Metadata?.GetValue("title", "No title")?.ToString() ?? "No title",
             uploadDate: f.UploadDateTime,
             description: f.Metadata?.GetValue("description", "No description")?.ToString() ?? "No description",
             duration: f.Length,
-            genre: ParseGenre(f.Metadata?.GetValue("genre", "Unknown")?.ToString()),
+            genre: f.Metadata?.GetValue("genre", "Unknown")?.ToString(),
             chunkSize: f.ChunkSizeBytes,
             metadata: f.Metadata?.ToDictionary() ?? new Dictionary<string, object>()
         )).ToList();
@@ -110,16 +125,4 @@ public class MovieRepo : IMovieRepo
         var fileInfo = await _gridFSBucket.Find(filter).FirstOrDefaultAsync();
         return fileInfo;
     }
-
-    private Genre ParseGenre(string genreString)
-    {
-        if (string.IsNullOrEmpty(genreString))
-            return Genre.Unknown;
-
-        return Enum.TryParse<Genre>(genreString, true, out var genre)
-            ? genre
-            : Genre.Unknown;
-    }
-
-
 }

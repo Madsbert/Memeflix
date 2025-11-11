@@ -8,7 +8,7 @@ namespace Memeflix.___Application.Interfaces;
 /// </summary>
 public interface IMovieService
 {
-    
+
     /// <summary>
     /// Uploads a movie file to the repository with associated metadata
     /// </summary>
@@ -18,6 +18,7 @@ public interface IMovieService
     Task<Stream> DownloadMovieStreamAsync(ObjectId fileId);
 
     Task<List<MovieMetadata>> GetAllMovies();
-    
+
+    Task<MovieMetadata> GetMovieMetadataAsync(ObjectId fileId);
 
 }
