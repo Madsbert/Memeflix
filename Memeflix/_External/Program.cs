@@ -4,6 +4,8 @@ using Memeflix.__Gateway;
 using Memeflix._External;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Configure maximum request body size for file uploads
+// Example: 524_288_000 = 500 MB
+long maxUploadBytes = 4_194_304_000; // 4 GB
+
+// Kestrel server limit (applies when using Kestrel directly)
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = maxUploadBytes;
+});
+
+// Multipart form options (applies to IFormFile multipart uploads)
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = maxUploadBytes; // total body size
+});
 
 // MongoDB Configuration
 var mongoConn = builder.Configuration.GetConnectionString("MongoDB");
