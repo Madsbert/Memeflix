@@ -50,7 +50,7 @@ public class MovieService : IMovieService
         );
         // Delegate the actual file upload to the repository layer
         // Returns the ObjectId assigned to the uploaded movie
-        return await _movieRepo.UploadFileAsync(file.Title, stream, metadata);
+        return await _movieRepo.UploadFileAsync(movieFile.FileName, stream, metadata);
     }
 
     public async Task<Stream> DownloadMovieStreamAsync(ObjectId fileId)

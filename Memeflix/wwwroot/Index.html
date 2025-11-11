@@ -53,10 +53,10 @@
             const dropdown = document.getElementById('videoDropdown');
             // Loop through each video in the response array
             videos.forEach(video => {
-                //console.log(video);
+                console.log(video.filename);
                 const option = document.createElement('option');
                 option.value = video.index;
-                option.textContent = video.index;
+                option.textContent = video.fileName;
                 dropdown.appendChild(option);
             });
         })
