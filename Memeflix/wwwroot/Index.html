@@ -40,11 +40,11 @@
 </div>
 
 <script>
-    const API_BASE = '/api/video';
+    const API_BASE = '/api/API';
 
     // Load videos on page load
     // Fetch the list of available videos from the API
-    fetch(`/api/API/list`)
+    fetch(`${API_BASE}/list`)
         // Convert the response to JSON format
         .then(response => response.json())
         // Process the video data received from the API
@@ -53,9 +53,10 @@
             const dropdown = document.getElementById('videoDropdown');
             // Loop through each video in the response array
             videos.forEach(video => {
+                //console.log(video);
                 const option = document.createElement('option');
-                option.value = video.filename;
-                option.textContent = video.filename;
+                option.value = video.index;
+                option.textContent = video.index;
                 dropdown.appendChild(option);
             });
         })
@@ -67,12 +68,12 @@
      * Plays the selected video in the video player
      * @param {string} filename - The name of the video file to play
      */
-    function playVideo(filename) {
-        if (!filename) return;
+    function playVideo(fileId) {
+        if (!fileId) return;
 
         // Construct the full URL for the video file by encoding the filename
         // encodeURIComponent ensures special characters in filenames are handled properly
-        const videoUrl = `${API_BASE}/filename/${encodeURIComponent(filename)}`;
+        const videoUrl = `${API_BASE}/downloadMovie/${fileId}`;
 
         // Update the video container HTML with a new video player element
         document.getElementById('videoContainer').innerHTML = `
