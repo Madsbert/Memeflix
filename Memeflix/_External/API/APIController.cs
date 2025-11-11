@@ -8,11 +8,11 @@ namespace Memeflix._External.API;
 
 [ApiController]
 [Route("api/[controller]")]
-public class APIController :ControllerBase
+public class APIController : ControllerBase
 {
-    
+
     public readonly IMovieService _movieService;
-    
+
     public APIController(IMovieService movieService)
     {
         _movieService = movieService;
@@ -25,7 +25,7 @@ public class APIController :ControllerBase
         {
             return BadRequest(ModelState);
         }
-    
+
         try
         {
             var fileId = await _movieService.UploadMovieAsync(file);
@@ -36,7 +36,7 @@ public class APIController :ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
-    
+
     [HttpGet("downloadMovie/{fileId}")]
     public async Task<IActionResult> DownloadMovieAsync(string fileId)
     {
@@ -49,7 +49,7 @@ public class APIController :ControllerBase
             if (stream == null)
                 return NotFound("File not found");
 
-           
+
             return File(stream, "video/mp4", enableRangeProcessing: true);
         }
         catch (Exception ex)
@@ -57,7 +57,7 @@ public class APIController :ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
-    
+
     [HttpGet("list")]
     public async Task<IActionResult> GetVideoList()
     {

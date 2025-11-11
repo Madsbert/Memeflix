@@ -51,7 +51,10 @@ public class MovieRepo : IMovieRepo
 
     public async Task<Stream> OpenDownloadStreamAsync(ObjectId fileId)
     {
-        var downloadStream = await _gridFSBucket.OpenDownloadStreamAsync(fileId);
+        var downloadStream = await _gridFSBucket.OpenDownloadStreamAsync(fileId, new GridFSDownloadOptions
+        {
+            Seekable = true
+        });
         return downloadStream;
     }
 
