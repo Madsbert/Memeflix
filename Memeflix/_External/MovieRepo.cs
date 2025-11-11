@@ -48,14 +48,14 @@ public class MovieRepo : IMovieRepo
         };
         return await _gridFSBucket.UploadFromStreamAsync(filename, stream, options);
     }
-    
+
     public async Task<Stream> OpenDownloadStreamAsync(ObjectId fileId)
     {
         var downloadStream = await _gridFSBucket.OpenDownloadStreamAsync(fileId);
         return downloadStream;
     }
-    
-    
+
+
     public Task<Stream> DownloadFileAsync(ObjectId fileId)
     {
         throw new NotImplementedException();
@@ -81,7 +81,7 @@ public class MovieRepo : IMovieRepo
             chunkSize: f.ChunkSizeBytes,
             metadata: f.Metadata?.ToDictionary() ?? new Dictionary<string, object>()
         )).ToList();
-    
+
         return result;
     }
 
@@ -99,7 +99,7 @@ public class MovieRepo : IMovieRepo
     {
         throw new NotImplementedException();
     }
-    
+
     // Get file information (metadata)
     public async Task<GridFSFileInfo> GetFileInfoAsync(ObjectId fileId)
     {
@@ -107,16 +107,16 @@ public class MovieRepo : IMovieRepo
         var fileInfo = await _gridFSBucket.Find(filter).FirstOrDefaultAsync();
         return fileInfo;
     }
-    
+
     private Genre ParseGenre(string genreString)
     {
         if (string.IsNullOrEmpty(genreString))
             return Genre.Unknown;
-    
-        return Enum.TryParse<Genre>(genreString, true, out var genre) 
-            ? genre 
+
+        return Enum.TryParse<Genre>(genreString, true, out var genre)
+            ? genre
             : Genre.Unknown;
     }
 
-    
+
 }
