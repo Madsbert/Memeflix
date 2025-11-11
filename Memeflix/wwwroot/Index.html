@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Video Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .dropdown {
+            width: 100%;
+            padding: 10px;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        video {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Video Player</h2>
+
+    <select id="videoDropdown" class="dropdown" onchange="playVideo(this.value)">
+        <option value="">Select a video...</option>
+    </select>
+
+    <div id="videoContainer">
+        <div class="loading">Choose a video to play</div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/API';
+
+        // Load videos on page load
+        // Fetch the list of available videos from the API
+        fetch(`${API_BASE}/list`)
+            // Convert the response to JSON format
+            .then(response => response.json())
+            // Process the video data received from the API
+            .then(videos => {
+                // Get reference to the dropdown element in the HTML
+                const dropdown = document.getElementById('videoDropdown');
+                // Loop through each video in the response array
+                videos.forEach(video => {
+                    console.log(video.filename);
+                    const option = document.createElement('option');
+                    option.value = video.index;
+                    option.textContent = video.fileName;
+                    dropdown.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading videos:', error);
+            });
+
+        /**
+         * Plays the selected video in the video player
+         * @param {string} filename - The name of the video file to play
+         */
+        function playVideo(fileId) {
+            if (!fileId) return;
+
+            // Construct the full URL for the video file by encoding the filename
+            // encodeURIComponent ensures special characters in filenames are handled properly
+            const videoUrl = `${API_BASE}/downloadMovie/${fileId}`;
+
+            // Update the video container HTML with a new video player element
+            document.getElementById('videoContainer').innerHTML = `
+                <video controls autoplay>
+                    <source src="${videoUrl}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            `;
+        }
+    </script>
+</body>
+
+</html>
