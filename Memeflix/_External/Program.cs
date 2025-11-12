@@ -5,9 +5,31 @@ using Memeflix._External;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Http;
+using Memeflix.__Application.Interfaces;
+using Memeflix.__Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+const String AuthScheme = "token";
+
+builder.Services.AddAuthentication(AuthScheme)
+    .AddCookie(AuthScheme, Options =>
+    {
+        Options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        Options.SlidingExpiration = true;
+    });
+
+builder.Services.AddAuthorization(builder =>
+{
+    builder.AddPolicy("user", pb =>
+    {
+        pb.RequireAuthenticatedUser()
+        .AddAuthenticationSchemes(AuthScheme)
+        .AddRequirements()
+        .RequireClaim("user_type", "standard");
+    });
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -45,7 +67,14 @@ builder.Services.AddSingleton<IGridFSBucket>(sp => new GridFSBucket(sp.GetRequir
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IMovieRepo, MovieRepo>();
 
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IUserRepo, UserRepo>();
+
 var app = builder.Build();
+
+// Authentication & Authorization
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -63,7 +92,6 @@ app.UseDefaultFiles();
 
 // Fallback to serve index.html for root URL
 app.MapFallbackToFile("index.html");
-app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

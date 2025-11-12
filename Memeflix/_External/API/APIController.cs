@@ -1,8 +1,9 @@
-﻿using Memeflix.____Domain;
+﻿using System.Security.Claims;
+using Memeflix.____Domain;
 using Memeflix.___Application.Interfaces;
-using Memeflix.__Gateway;
+using Memeflix.__Application.Interfaces;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Extensions;
 using MongoDB.Bson;
 
 namespace Memeflix._External.API;
@@ -11,12 +12,13 @@ namespace Memeflix._External.API;
 [Route("api/[controller]")]
 public class APIController : ControllerBase
 {
-
     public readonly IMovieService _movieService;
+    public readonly ILoginService _loginService;
 
-    public APIController(IMovieService movieService)
+    public APIController(IMovieService movieService, ILoginService loginService)
     {
         _movieService = movieService;
+        _loginService = loginService;
     }
 
     [HttpPost("uploadMovie")]
@@ -91,5 +93,46 @@ public class APIController : ControllerBase
         {
             return BadRequest($"Error retrieving video list: {ex.Message}");
         }
+    }
+
+    [HttpPost("createUser")]
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
+    {
+        try
+        {
+            await _loginService.RegisterAsync(request.Username, request.Password);
+            return Ok("User created successfully");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error creating user: {ex.Message}");
+        }
+    }
+
+    public record CreateUserRequest(string Username, string Password);
+
+
+    [HttpGet("login")]
+    public async Task<IActionResult> TestAuth(User user)
+    {
+        if (await _loginService.LoginAsync(user.Username, user.Password))
+        {
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.Name, user.Username)
+            };
+            var identity = new ClaimsIdentity(claims, "User");
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(principal);
+            return Ok("User authenticated");
+        }
+        return BadRequest("Invalid username or password");
+    }
+
+    [HttpGet("health")]
+    public async Task<IActionResult> HealthCheck()
+    {
+        return Ok("API is running");
     }
 }

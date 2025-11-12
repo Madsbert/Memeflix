@@ -4,116 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Video Player</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .dropdown {
-            width: 100%;
-            padding: 10px;
-            margin: 20px 0;
-            font-size: 16px;
-        }
-
-        video {
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-    </style>
+    <title>Memeflix</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <h2>Video Player</h2>
-
-    <select id="videoDropdown" class="dropdown" onchange="playVideo(this.value)">
-        <option value="">Select a video...</option>
-    </select>
-
-    <div id="videoContainer">
-        <div class="loading">Choose a video to play</div>
-    </div>
-
-    <div>
-        <p id="videoLength">Længde</p>
-        <p id="videoGenre">Genre</p>
-        <p id="videoDescription">Beskrivelse</p>
+    <div class="login-container">
+        <h2>Login to Memeflix</h2>
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+            <button type="button" id="registerBtn">Register</button>
+        </form>
+        <div id="loginMessage"></div>
     </div>
 
     <script>
-        const API_BASE = '/api/API';
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-        // Load videos on page load
-        // Fetch the list of available videos from the API
-        fetch(`${API_BASE}/list`)
-            // Convert the response to JSON format
-            .then(response => response.json())
-            // Process the video data received from the API
-            .then(videos => {
-                // Get reference to the dropdown element in the HTML
-                const dropdown = document.getElementById('videoDropdown');
-                // Loop through each video in the response array
-                videos.forEach(video => {
-                    console.log(video.filename);
-                    const option = document.createElement('option');
-                    option.value = video.index;
-                    option.textContent = video.title;
-                    dropdown.appendChild(option);
-                });
+            // Simple client-side validation
+            if (username === 'user' && password === 'pass') {
+                document.getElementById('loginMessage').innerText = 'Login successful!';
+                // Redirect to main page or load content
+                window.location.href = 'memeflix.html';
+            } else {
+                document.getElementById('loginMessage').innerText = 'Invalid username or password.';
+            }
+        });
+
+        document.getElementById('registerBtn').addEventListener('click', function (event) {
+            event.preventDefault();
+            // Registration logic here
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('api/API/createUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: username, password: password })
             })
-            .catch(error => {
-                console.error('Error loading videos:', error);
-            });
-
-        /**
-         * Plays the selected video in the video player
-         * @param {string} filename - The name of the video file to play
-         */
-        function playVideo(fileId) {
-            if (!fileId) return;
-
-            const lengthElement = document.getElementById('videoLength');
-            const genreElement = document.getElementById('videoGenre');
-            const descriptionElement = document.getElementById('videoDescription');
-
-            // Fetch video metadata from the API
-            fetch(`${API_BASE}/getMovieMetaData/${fileId}`)
-                .then(response => response.json())
-                .then(metadata => {
-                    let durationSeconds = Math.round(metadata.duration / 1000);
-                    let minutes = Math.floor(durationSeconds / 60);
-                    let seconds = durationSeconds % 60;
-                    lengthElement.textContent = `Længde: ${minutes} minutter og ${seconds} sekunder`;
-                    genreElement.textContent = `Genre: ${metadata.genre}`;
-                    descriptionElement.textContent = `Beskrivelse: ${metadata.description}`;
+                .then(response => {
+                    if (response.ok) {
+                        return response.json().then(data => {
+                            document.getElementById('loginMessage').innerText = 'Registration successful! You can now log in.';
+                        });
+                    } else {
+                        return response.json().then(errorData => {
+                            document.getElementById('loginMessage').innerText = 'Error: ' + errorData;
+                        }).catch(() => {
+                            document.getElementById('loginMessage').innerText = 'Error: ' + response.statusText;
+                        });
+                    }
                 })
                 .catch(error => {
-                    console.error('Error fetching video metadata:', error);
+                    document.getElementById('loginMessage').innerText = 'Error uploading user: ' + error;
                 });
-
-
-            // Construct the full URL for the video file by encoding the filename
-            // encodeURIComponent ensures special characters in filenames are handled properly
-            const videoUrl = `${API_BASE}/downloadMovie/${fileId}`;
-
-            // Update the video container HTML with a new video player element
-            document.getElementById('videoContainer').innerHTML = `
-                <video controls autoplay>
-                    <source src="${videoUrl}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            `;
-        }
+        });
     </script>
 </body>
 
