@@ -21,13 +21,12 @@ public class UserRepo : IUserRepo
         var collection = _database.GetCollection<BsonDocument>("Users");
         var document = new BsonDocument()
         {
-            {"Id", user.Id },
             { "Username", user.Username },
             { "Password", user.Password },
             { "Roles", new BsonArray(user.Roles) }
         };
         await collection.InsertOneAsync(document);
-        return user.Id;
+        return user._id;
     }
 
     public async Task<bool> AuthenticateAsync(User user)

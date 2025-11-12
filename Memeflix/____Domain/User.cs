@@ -8,14 +8,13 @@ namespace Memeflix.____Domain;
 public class User
 {
     [BsonId]
-    public ObjectId Id { get; set; }
+    public ObjectId _id { get; set; }
     public string Username { get; set; }
     public string Password { get; set; }
     public List<string> Roles { get; set; }
 
     public User(string username, string password)
     {
-        Id = ObjectId.GenerateNewId();
         Username = username;
         Password = password;
         Roles = new List<string>();

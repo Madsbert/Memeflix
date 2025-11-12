@@ -16,7 +16,8 @@ public class LoginService : ILoginService
     public async Task<bool> LoginAsync(string username, string password)
     {
         // Actually implement login logic here
-        throw new NotImplementedException();
+        var user = new User(username, password);
+        return await _userRepo.AuthenticateAsync(user);
     }
     public async Task LogoutAsync(string username)
     {

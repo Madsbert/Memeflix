@@ -44,13 +44,13 @@ public class APIController : ControllerBase
     public async Task<IActionResult> GetMovieMetaData(string fileId)
     {
         if (!ObjectId.TryParse(fileId, out ObjectId id))
-            return BadRequest("Invalid file Id");
+            return BadRequest(new { message = "Invalid file Id" });
 
         try
         {
             var metadata = await _movieService.GetMovieMetadataAsync(id);
             if (metadata == null)
-                return NotFound("File not found");
+                return NotFound(new { message = "File not found" });
 
             return Ok(metadata);
         }
@@ -64,13 +64,13 @@ public class APIController : ControllerBase
     public async Task<IActionResult> DownloadMovieAsync(string fileId)
     {
         if (!ObjectId.TryParse(fileId, out ObjectId id))
-            return BadRequest("Invalid file Id");
+            return BadRequest(new { message = "Invalid file Id" });
 
         try
         {
             var stream = await _movieService.DownloadMovieStreamAsync(id);
             if (stream == null)
-                return NotFound("File not found");
+                return NotFound(new { message = "File not found" });
 
 
             return File(stream, "video/mp4", enableRangeProcessing: true);
@@ -91,7 +91,7 @@ public class APIController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest($"Error retrieving video list: {ex.Message}");
+            return BadRequest(new { message = $"Error retrieving video list: {ex.Message}" });
         }
     }
 
@@ -101,11 +101,11 @@ public class APIController : ControllerBase
         try
         {
             await _loginService.RegisterAsync(request.Username, request.Password);
-            return Ok("User created successfully");
+            return Ok(new { message = "User created successfully" });
         }
         catch (Exception ex)
         {
-            return BadRequest($"Error creating user: {ex.Message}");
+            return BadRequest(new { message = $"Error creating user: {ex.Message}" });
         }
     }
 
@@ -113,8 +113,10 @@ public class APIController : ControllerBase
 
 
     [HttpGet("login")]
-    public async Task<IActionResult> TestAuth(User user)
+    public async Task<IActionResult> TestAuth(string Username, string Password)
     {
+        var user = new User(Username, Password);
+
         if (await _loginService.LoginAsync(user.Username, user.Password))
         {
             var claims = new List<Claim>
@@ -125,14 +127,15 @@ public class APIController : ControllerBase
             var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(principal);
-            return Ok("User authenticated");
+            // Return success json response
+            return Ok(new { message = "Login successful" });
         }
-        return BadRequest("Invalid username or password");
+        return BadRequest(new { message = "Invalid username or password" });
     }
 
     [HttpGet("health")]
     public async Task<IActionResult> HealthCheck()
     {
-        return Ok("API is running");
+        return Ok(new { message = "API is running" });
     }
 }

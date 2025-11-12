@@ -28,14 +28,22 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Simple client-side validation
-            if (username === 'user' && password === 'pass') {
-                document.getElementById('loginMessage').innerText = 'Login successful!';
-                // Redirect to main page or load content
-                window.location.href = 'memeflix.html';
-            } else {
-                document.getElementById('loginMessage').innerText = 'Invalid username or password.';
-            }
+            fetch(`api/API/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Login failed');
+                    }
+                })
+                .then(data => {
+                    document.getElementById('loginMessage').innerText = 'Login successful!';
+                    // Redirect to main page or load content
+                    window.location.href = 'memeflix.html';
+                })
+                .catch(error => {
+                    document.getElementById('loginMessage').innerText = 'Invalid username or password.';
+                });
         });
 
         document.getElementById('registerBtn').addEventListener('click', function (event) {
