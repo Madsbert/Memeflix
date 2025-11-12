@@ -44,6 +44,7 @@ public class MovieRepo : IMovieRepo
                 { "genre", metadata.Genre },
                 { "uploadDate", metadata.UploadDate },
                 { "filename", metadata.FileName },
+                { "title", metadata.Title}
             },
         };
         return await _gridFSBucket.UploadFromStreamAsync(filename, stream, options);
