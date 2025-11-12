@@ -4,6 +4,8 @@ using Memeflix.___Application.Interfaces;
 using Memeflix.__Gateway;
 using MongoDB.Bson;
 using MongoDB.Driver.GridFS;
+using Xabe.FFmpeg;
+using System.IO;
 
 namespace Memeflix.___Application.Services;
 
@@ -37,6 +39,26 @@ public class MovieService : IMovieService
             throw new ArgumentNullException(nameof(file));
         }
 
+        // Get video duration
+        long durationMs = 0;
+        var tempFile = Path.GetTempFileName();
+        try
+        {
+            using (var fileStream = File.Create(tempFile))
+            {
+                await movieFile.CopyToAsync(fileStream);
+            }
+            var mediaInfo = await FFmpeg.GetMediaInfo(tempFile);
+            durationMs = (long)mediaInfo.Duration.TotalMilliseconds;
+        }
+        finally
+        {
+            if (File.Exists(tempFile))
+            {
+                File.Delete(tempFile);
+            }
+        }
+
         using var stream = movieFile.OpenReadStream();
         var metadata = new MovieMetadata(
             index: ObjectId.GenerateNewId().ToString(),
@@ -44,7 +66,7 @@ public class MovieService : IMovieService
             title: file.Title,
             uploadDate: DateTime.Now,
             description: file.Description,
-            duration: 0,
+            duration: durationMs,
             genre: file.Genre,
             chunkSize: 255 * 1024,
             metadata: new Dictionary<string, object>()

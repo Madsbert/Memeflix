@@ -1,6 +1,5 @@
 ﻿using Memeflix.____Domain;
 using Memeflix.__Gateway;
-using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
@@ -44,7 +43,8 @@ public class MovieRepo : IMovieRepo
                 { "genre", metadata.Genre },
                 { "uploadDate", metadata.UploadDate },
                 { "filename", metadata.FileName },
-                { "title", metadata.Title}
+                { "title", metadata.Title },
+                { "duration", metadata.Duration },
             },
         };
         return await _gridFSBucket.UploadFromStreamAsync(filename, stream, options);
@@ -77,7 +77,7 @@ public class MovieRepo : IMovieRepo
             title: fileInfo.Metadata?.GetValue("title", "No title")?.ToString() ?? "No title",
             uploadDate: fileInfo.UploadDateTime,
             description: fileInfo.Metadata?.GetValue("description", "No description")?.ToString() ?? "No description",
-            duration: fileInfo.Length,
+            duration: fileInfo.Metadata?.GetValue("duration", 0)?.ToInt32() ?? 0,
             genre: fileInfo.Metadata?.GetValue("genre", "Unknown")?.ToString(),
             chunkSize: fileInfo.ChunkSizeBytes,
             metadata: fileInfo.Metadata?.ToDictionary() ?? new Dictionary<string, object>()
@@ -95,7 +95,7 @@ public class MovieRepo : IMovieRepo
             title: f.Metadata?.GetValue("title", "No title")?.ToString() ?? "No title",
             uploadDate: f.UploadDateTime,
             description: f.Metadata?.GetValue("description", "No description")?.ToString() ?? "No description",
-            duration: f.Length,
+            duration: f.Metadata?.GetValue("duration", 0)?.ToInt32() ?? 0,
             genre: f.Metadata?.GetValue("genre", "Unknown")?.ToString(),
             chunkSize: f.ChunkSizeBytes,
             metadata: f.Metadata?.ToDictionary() ?? new Dictionary<string, object>()
