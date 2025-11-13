@@ -3,9 +3,7 @@ using Memeflix.____Domain;
 using Memeflix.___Application.Interfaces;
 using Memeflix.__Gateway;
 using MongoDB.Bson;
-using MongoDB.Driver.GridFS;
-using Xabe.FFmpeg;
-using System.IO;
+using NReco.VideoInfo;
 
 namespace Memeflix.___Application.Services;
 
@@ -41,22 +39,25 @@ public class MovieService : IMovieService
 
         // Get video duration
         long durationMs = 0;
-        var tempFile = Path.GetTempFileName();
-        try
+
+        if (movieFile != null || movieFile.Length != 0)
         {
-            using (var fileStream = File.Create(tempFile))
+            // Create a temporary file path
+            var tempFilePath = Path.Combine(Path.GetTempPath(), movieFile.FileName);
+            // Save the file to a temporary location
+            using (var fileStream = new FileStream(tempFilePath, FileMode.Create))
             {
                 await movieFile.CopyToAsync(fileStream);
             }
-            var mediaInfo = await FFmpeg.GetMediaInfo(tempFile);
-            durationMs = (long)mediaInfo.Duration.TotalMilliseconds;
-        }
-        finally
-        {
-            if (File.Exists(tempFile))
-            {
-                File.Delete(tempFile);
-            }
+
+            // Use ffprobe to get video duration
+            var ffProbe = new FFProbe();
+            var videoInfo = ffProbe.GetMediaInfo(tempFilePath);
+
+            // Optionally delete the temp file after usage
+            File.Delete(tempFilePath);
+
+            durationMs = (long)videoInfo.Duration.TotalMilliseconds;
         }
 
         using var stream = movieFile.OpenReadStream();
@@ -74,6 +75,7 @@ public class MovieService : IMovieService
         // Delegate the actual file upload to the repository layer
         // Returns the ObjectId assigned to the uploaded movie
         return await _movieRepo.UploadFileAsync(movieFile.FileName, stream, metadata);
+
     }
 
     public async Task<Stream> DownloadMovieStreamAsync(ObjectId fileId)
