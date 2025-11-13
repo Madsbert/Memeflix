@@ -55,6 +55,12 @@ public class MovieService : IMovieService
 
     }
 
+    /// <summary>
+    /// Downloads a movie file stream from the repository
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public async Task<Stream> DownloadMovieStreamAsync(ObjectId fileId)
     {
         if (fileId == ObjectId.Empty)
@@ -63,6 +69,12 @@ public class MovieService : IMovieService
         return await _movieRepo.OpenDownloadStreamAsync(fileId);
     }
 
+    /// <summary>
+    /// Retrieves metadata for a specific movie file from the repository
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public async Task<MovieMetadata> GetMovieMetadataAsync(ObjectId fileId)
     {
         if (fileId == ObjectId.Empty)
@@ -71,6 +83,10 @@ public class MovieService : IMovieService
         return await _movieRepo.GetFileMetadataAsync(fileId);
     }
 
+    /// <summary>
+    /// Retrieves metadata for all movie files from the repository
+    /// </summary>
+    /// <returns></returns>
     public async Task<List<MovieMetadata>> GetAllMovies()
     {
         return await _movieRepo.GetAllFilesAsync();

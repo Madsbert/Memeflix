@@ -7,6 +7,9 @@ using MongoDB.Driver;
 
 namespace Memeflix._External;
 
+/// <summary>
+/// Repository implementation for user-related operations
+/// </summary>
 public class UserRepo : IUserRepo
 {
     private readonly IMongoDatabase _database;
@@ -16,6 +19,11 @@ public class UserRepo : IUserRepo
         _database = database;
     }
 
+    /// <summary>
+    /// Creates a new user in the database
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
     public async Task<ObjectId> CreateUserAsync(User user)
     {
         var collection = _database.GetCollection<BsonDocument>("Users");
@@ -29,6 +37,11 @@ public class UserRepo : IUserRepo
         return user._id;
     }
 
+    /// <summary>
+    /// Authenticates a user by verifying username and password
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
     public async Task<bool> AuthenticateAsync(User user)
     {
         var collection = _database.GetCollection<User>("Users");
@@ -37,5 +50,5 @@ public class UserRepo : IUserRepo
         var foundUser = await collection.Find(filter).FirstOrDefaultAsync();
         return foundUser != null;
     }
-    
+
 }

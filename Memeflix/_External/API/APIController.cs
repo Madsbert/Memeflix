@@ -10,6 +10,9 @@ using OllamaSharp;
 
 namespace Memeflix._External.API;
 
+/// <summary>
+/// API Controller for handling movie and user-related endpoints
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class APIController : ControllerBase
@@ -23,6 +26,11 @@ public class APIController : ControllerBase
         _loginService = loginService;
     }
 
+    /// <summary>
+    /// Uploads a movie file along with its metadata
+    /// </summary>
+    /// <param name="file"></param>
+    /// <returns></returns>
     [HttpPost("uploadMovie")]
     public async Task<IActionResult> UploadMovieAsync([FromForm] MovieUploadModel file)
     {
@@ -41,6 +49,12 @@ public class APIController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
+    /// <summary>
+    /// Gets metadata for a specific movie file
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet("getMovieMetaData/{fileId}")]
     public async Task<IActionResult> GetMovieMetaData(string fileId)
@@ -62,6 +76,12 @@ public class APIController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Gets AI-based movie recommendations based on title and genre
+    /// </summary>
+    /// <param name="title"></param>
+    /// <param name="genre"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet("getAIRecommendation/{title}/{genre}")]
     public async Task<IActionResult> GetAIRecommendation(string title, string genre)
@@ -91,6 +111,11 @@ public class APIController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Downloads a movie file stream from the repository
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpGet("downloadMovie/{fileId}")]
     public async Task<IActionResult> DownloadMovieAsync(string fileId)
@@ -113,6 +138,10 @@ public class APIController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Gets a list of all video files with metadata
+    /// </summary>
+    /// <returns></returns>
     [Authorize]
     [HttpGet("list")]
     public async Task<IActionResult> GetVideoList()
@@ -128,6 +157,11 @@ public class APIController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Creates a new user account
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost("createUser")]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
     {
@@ -142,9 +176,12 @@ public class APIController : ControllerBase
         }
     }
 
-    public record CreateUserRequest(string Username, string Password);
-
-
+    /// <summary>
+    /// Tests user authentication and issues an auth cookie on success
+    /// </summary>
+    /// <param name="Username"></param>
+    /// <param name="Password"></param>
+    /// <returns></returns>
     [HttpGet("login")]
     public async Task<IActionResult> TestAuth(string Username, string Password)
     {
@@ -166,12 +203,20 @@ public class APIController : ControllerBase
         return BadRequest(new { message = "Invalid username or password" });
     }
 
+    /// <summary>
+    /// Health check endpoint
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("health")]
     public async Task<IActionResult> HealthCheck()
     {
         return Ok(new { message = "API is running" });
     }
 
+    /// <summary>
+    /// Logs out the current user by removing the auth cookie
+    /// </summary>
+    /// <returns></returns>
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {

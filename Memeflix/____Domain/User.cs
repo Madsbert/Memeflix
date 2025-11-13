@@ -5,6 +5,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Memeflix.____Domain;
 
+/// <summary>
+/// User entity representing a user in the system.
+/// </summary>
 public class User
 {
     [BsonId]

@@ -10,6 +10,7 @@ using Memeflix.__Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Authentication with Cookie Scheme
 builder.Services.AddAuthentication("Cookies")
     .AddCookie("Cookies", options =>
     {

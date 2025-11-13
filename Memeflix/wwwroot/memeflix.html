@@ -137,6 +137,7 @@
                             Your browser does not support the video tag.
                         </video>`;
 
+                    // Fetch AI recommendation based on video title and genre
                     fetch(`${API_BASE}/getAIRecommendation/${encodeURIComponent(metadata.title)}/${encodeURIComponent(metadata.genre)}`, { credentials: 'include' })
                         .then(response => response.json())
                         .then(aiData => {

@@ -50,6 +50,11 @@ public class MovieRepo : IMovieRepo
         return await _gridFSBucket.UploadFromStreamAsync(filename, stream, options);
     }
 
+    /// <summary>
+    /// Opens a download stream for a specific movie file stored in GridFS
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <returns></returns>
     public async Task<Stream> OpenDownloadStreamAsync(ObjectId fileId)
     {
         var downloadStream = await _gridFSBucket.OpenDownloadStreamAsync(fileId, new GridFSDownloadOptions
@@ -59,12 +64,11 @@ public class MovieRepo : IMovieRepo
         return downloadStream;
     }
 
-
-    public Task<Stream> DownloadFileAsync(ObjectId fileId)
-    {
-        throw new NotImplementedException();
-    }
-
+    /// <summary>
+    /// Retrieves metadata for a specific file stored in GridFS
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <returns></returns>
     public async Task<MovieMetadata> GetFileMetadataAsync(ObjectId fileId)
     {
         var fileInfo = await GetFileInfoAsync(fileId);
@@ -84,6 +88,10 @@ public class MovieRepo : IMovieRepo
         );
     }
 
+    /// <summary>
+    /// Retrieves metadata for all files stored in GridFS
+    /// </summary>
+    /// <returns></returns>
     public async Task<List<MovieMetadata>> GetAllFilesAsync()
     {
         List<GridFSFileInfo> files = await _gridFSBucket.Find(FilterDefinition<GridFSFileInfo>.Empty)
@@ -104,22 +112,11 @@ public class MovieRepo : IMovieRepo
         return result;
     }
 
-    public Task<bool> DeleteFileAsync(ObjectId fileId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> FileExistsAsync(string filename)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<long> GetFileSizeAsync(ObjectId fileId)
-    {
-        throw new NotImplementedException();
-    }
-
-    // Get file information (metadata)
+    /// <summary>
+    /// Get file information (metadata)
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <returns></returns>
     public async Task<GridFSFileInfo> GetFileInfoAsync(ObjectId fileId)
     {
         var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", fileId);

@@ -16,11 +16,7 @@ public interface IMovieRepo
     /// <param name="metadata"></param>
     /// <returns></returns>
     Task<ObjectId> UploadFileAsync(string filename, Stream stream, MovieMetadata metadata);
-    Task<Stream> DownloadFileAsync(ObjectId fileId);
     Task<Stream> OpenDownloadStreamAsync(ObjectId fileId);
     Task<MovieMetadata> GetFileMetadataAsync(ObjectId fileId);
     Task<List<MovieMetadata>> GetAllFilesAsync();
-    Task<bool> DeleteFileAsync(ObjectId fileId);
-    Task<bool> FileExistsAsync(string filename);
-    Task<long> GetFileSizeAsync(ObjectId fileId);
 }
