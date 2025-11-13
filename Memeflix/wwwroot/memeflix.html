@@ -116,10 +116,8 @@
             fetch(`${API_BASE}/getMovieMetaData/${fileId}`,{credentials: 'include'})
                 .then(response => response.json())
                 .then(metadata => {
-                    let durationSeconds = Math.round(metadata.duration / 1000);
-                    let minutes = Math.floor(durationSeconds / 60);
-                    let seconds = durationSeconds % 60;
-                    lengthElement.textContent = `Længde: ${minutes} minutter og ${seconds} sekunder`;
+                    let sizeMB = (metadata.size / (1024 * 1024)).toFixed(2);
+                    lengthElement.textContent = `Størrelse: ${sizeMB} MB`;
                     genreElement.textContent = `Genre: ${metadata.genre}`;
                     descriptionElement.textContent = `Beskrivelse: ${metadata.description}`;
                 })

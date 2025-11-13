@@ -19,7 +19,7 @@ public class MovieMetadata
 
     public string Description { get; set; }
 
-    public long Duration { get; set; }
+    public long Size { get; set; }
 
     public string Genre { get; set; }
 
@@ -27,14 +27,14 @@ public class MovieMetadata
 
     public Dictionary<string, object> Metadata { get; set; }
 
-    public MovieMetadata(string index, string filename, string title, DateTime uploadDate, string description, long duration, string genre, int chunkSize, Dictionary<string, object> metadata)
+    public MovieMetadata(string index, string filename, string title, DateTime uploadDate, string description, long size, string genre, int chunkSize, Dictionary<string, object> metadata)
     {
         Index = index;
         FileName = filename;
         Title = title;
         UploadDate = uploadDate;
         Description = description;
-        Duration = duration;
+        Size = size;
         Genre = genre;
         ChunkSize = chunkSize;
         Metadata = metadata;
