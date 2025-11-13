@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using OllamaSharp;
 
 namespace Memeflix._External.API;
 
@@ -60,7 +61,36 @@ public class APIController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
-    
+
+    [Authorize]
+    [HttpGet("getAIRecommendation/{title}/{genre}")]
+    public async Task<IActionResult> GetAIRecommendation(string title, string genre)
+    {
+
+        var ollamaClient = new OllamaApiClient("http://localhost:11434", "gemma3:1b");
+        try
+        {
+            var prompt = $"Provide 3 very brief movie recommendations for another movie like the movie '{title}' in the genre '{genre}'." +
+            $"\nIf you don't know the movie, just provide general recommendations for that genre.\n Make the recommendations concise and to the point." +
+            $"\nFormat the recommendations as a numbered list." + "Do not include any additional commentary or questions. Just the list." +
+            "\nExample:\\n1. Movie One (RELEASE_YEAR), (2 GENRES) - (DIRECTOR)\\n2. Movie Two (RELEASE_YEAR), (2 GENRES) - (DIRECTOR)\\n3. Movie Three (RELEASE_YEAR), (2 GENRES) - DIRECTOR\n";
+
+
+            var chat = new Chat(ollamaClient);
+            string response = "";
+            await foreach (var answer in chat.SendAsync(prompt, null, null, null))
+            {
+                response += answer;
+            }
+
+            return Ok(new { recommendation = response.Trim() });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
+        }
+    }
+
     [Authorize]
     [HttpGet("downloadMovie/{fileId}")]
     public async Task<IActionResult> DownloadMovieAsync(string fileId)
@@ -79,7 +109,7 @@ public class APIController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
+            return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
         }
     }
 
@@ -141,7 +171,7 @@ public class APIController : ControllerBase
     {
         return Ok(new { message = "API is running" });
     }
-    
+
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {

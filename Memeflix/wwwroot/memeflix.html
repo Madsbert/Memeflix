@@ -48,8 +48,12 @@
         <p id="videoLength">Længde</p>
         <p id="videoGenre">Genre</p>
         <p id="videoDescription">Beskrivelse</p>
+        <p id="aiRecommendation">AI Recommendation</p>
+        <div>
+            <p id="aiOutput">Gary</p>
+        </div>
     </div>
-    
+
     <div>
         <button id="logOutBtn">Logout</button>
     </div>
@@ -78,10 +82,10 @@
                     console.error('Error logging out:', error);
                 });
         });
-        
+
         // Load videos on page load
         // Fetch the list of available videos from the API
-        fetch(`${API_BASE}/list`,{credentials: 'include'})
+        fetch(`${API_BASE}/list`, { credentials: 'include' })
             // Convert the response to JSON format
             .then(response => response.json())
             // Process the video data received from the API
@@ -111,31 +115,40 @@
             const lengthElement = document.getElementById('videoLength');
             const genreElement = document.getElementById('videoGenre');
             const descriptionElement = document.getElementById('videoDescription');
+            const aiOutputElement = document.getElementById('aiOutput');
 
             // Fetch video metadata from the API
-            fetch(`${API_BASE}/getMovieMetaData/${fileId}`,{credentials: 'include'})
+            fetch(`${API_BASE}/getMovieMetaData/${fileId}`, { credentials: 'include' })
                 .then(response => response.json())
                 .then(metadata => {
                     let sizeMB = (metadata.size / (1024 * 1024)).toFixed(2);
                     lengthElement.textContent = `Størrelse: ${sizeMB} MB`;
                     genreElement.textContent = `Genre: ${metadata.genre}`;
                     descriptionElement.textContent = `Beskrivelse: ${metadata.description}`;
+
+                    // Construct the full URL for the video file by encoding the filename
+                    // encodeURIComponent ensures special characters in filenames are handled properly
+                    const videoUrl = `${API_BASE}/downloadMovie/${fileId}`;
+
+                    // Update the video container HTML with a new video player element
+                    document.getElementById('videoContainer').innerHTML = `
+                        <video controls autoplay>
+                            <source src="${videoUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>`;
+
+                    fetch(`${API_BASE}/getAIRecommendation/${encodeURIComponent(metadata.title)}/${encodeURIComponent(metadata.genre)}`, { credentials: 'include' })
+                        .then(response => response.json())
+                        .then(aiData => {
+                            aiOutputElement.textContent = aiData.recommendation;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching AI recommendation:', error);
+                        });
                 })
                 .catch(error => {
                     console.error('Error fetching video metadata:', error);
                 });
-
-
-            // Construct the full URL for the video file by encoding the filename
-            // encodeURIComponent ensures special characters in filenames are handled properly
-            const videoUrl = `${API_BASE}/downloadMovie/${fileId}`;
-
-            // Update the video container HTML with a new video player element
-            document.getElementById('videoContainer').innerHTML = `
-                <video controls autoplay>
-                    <source src="${videoUrl}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>`;
         }
     </script>
 </body>
