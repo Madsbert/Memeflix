@@ -49,13 +49,39 @@
         <p id="videoGenre">Genre</p>
         <p id="videoDescription">Beskrivelse</p>
     </div>
+    
+    <div>
+        <button id="logOutBtn">Logout</button>
+    </div>
 
     <script>
         const API_BASE = '/api/API';
 
+        // Redirect if not logged in
+        if (localStorage.getItem('loggedIn') !== 'true') {
+            window.location.href = 'index.html';
+        }
+
+        // Logout button logic
+        document.getElementById('logOutBtn').addEventListener('click', function () {
+            fetch(`${API_BASE}/logout`, {
+                method: 'POST',
+                credentials: 'include' // include cookies so backend knows which user
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                    localStorage.removeItem('loggedIn');
+                    window.location.href = 'index.html';
+                })
+                .catch(error => {
+                    console.error('Error logging out:', error);
+                });
+        });
+        
         // Load videos on page load
         // Fetch the list of available videos from the API
-        fetch(`${API_BASE}/list`)
+        fetch(`${API_BASE}/list`,{credentials: 'include'})
             // Convert the response to JSON format
             .then(response => response.json())
             // Process the video data received from the API
@@ -87,7 +113,7 @@
             const descriptionElement = document.getElementById('videoDescription');
 
             // Fetch video metadata from the API
-            fetch(`${API_BASE}/getMovieMetaData/${fileId}`)
+            fetch(`${API_BASE}/getMovieMetaData/${fileId}`,{credentials: 'include'})
                 .then(response => response.json())
                 .then(metadata => {
                     let durationSeconds = Math.round(metadata.duration / 1000);
@@ -111,8 +137,7 @@
                 <video controls autoplay>
                     <source src="${videoUrl}" type="video/mp4">
                     Your browser does not support the video tag.
-                </video>
-            `;
+                </video>`;
         }
     </script>
 </body>

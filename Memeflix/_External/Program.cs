@@ -10,26 +10,16 @@ using Memeflix.__Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-const String AuthScheme = "token";
-
-builder.Services.AddAuthentication(AuthScheme)
-    .AddCookie(AuthScheme, Options =>
+builder.Services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", options =>
     {
-        Options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-        Options.SlidingExpiration = true;
+        options.LoginPath = "/login.html";
+        options.AccessDeniedPath = "/login.html";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
     });
 
-builder.Services.AddAuthorization(builder =>
-{
-    builder.AddPolicy("user", pb =>
-    {
-        pb.RequireAuthenticatedUser()
-        .AddAuthenticationSchemes(AuthScheme)
-        .AddRequirements()
-        .RequireClaim("user_type", "standard");
-    });
-});
+builder.Services.AddAuthorization();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -69,6 +59,8 @@ builder.Services.AddScoped<IMovieRepo, MovieRepo>();
 
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 

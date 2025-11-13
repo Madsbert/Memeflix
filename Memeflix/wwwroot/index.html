@@ -28,7 +28,11 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            fetch(`api/API/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+            fetch(`api/API/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+            {
+                method: 'GET',
+                credentials: 'include',
+            })
                 .then(response => {
                     if (response.ok) {
                         return response.json();
@@ -37,8 +41,8 @@
                     }
                 })
                 .then(data => {
-                    document.getElementById('loginMessage').innerText = 'Login successful!';
-                    // Redirect to main page or load content
+                    localStorage.setItem('loggedIn', 'true'); // <— set login flag
+                    console.log(data.message);
                     window.location.href = 'memeflix.html';
                 })
                 .catch(error => {

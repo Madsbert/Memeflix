@@ -19,11 +19,6 @@ public class LoginService : ILoginService
         var user = new User(username, password);
         return await _userRepo.AuthenticateAsync(user);
     }
-    public async Task LogoutAsync(string username)
-    {
-        // Implement logout logic here
-        throw new NotImplementedException();
-    }
     public async Task<bool> RegisterAsync(string username, string password)
     {
         var user = new User(username, password);

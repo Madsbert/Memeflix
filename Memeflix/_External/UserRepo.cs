@@ -37,4 +37,5 @@ public class UserRepo : IUserRepo
         var foundUser = await collection.Find(filter).FirstOrDefaultAsync();
         return foundUser != null;
     }
+    
 }

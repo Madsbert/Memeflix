@@ -3,6 +3,7 @@ using Memeflix.____Domain;
 using Memeflix.___Application.Interfaces;
 using Memeflix.__Application.Interfaces;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -39,7 +40,7 @@ public class APIController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
-
+    [Authorize]
     [HttpGet("getMovieMetaData/{fileId}")]
     public async Task<IActionResult> GetMovieMetaData(string fileId)
     {
@@ -59,7 +60,8 @@ public class APIController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
-
+    
+    [Authorize]
     [HttpGet("downloadMovie/{fileId}")]
     public async Task<IActionResult> DownloadMovieAsync(string fileId)
     {
@@ -81,6 +83,7 @@ public class APIController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpGet("list")]
     public async Task<IActionResult> GetVideoList()
     {
@@ -126,7 +129,7 @@ public class APIController : ControllerBase
             var identity = new ClaimsIdentity(claims, "User");
             var principal = new ClaimsPrincipal(identity);
 
-            await HttpContext.SignInAsync(principal);
+            await HttpContext.SignInAsync("Cookies", principal);
             // Return success json response
             return Ok(new { message = "Login successful" });
         }
@@ -137,5 +140,12 @@ public class APIController : ControllerBase
     public async Task<IActionResult> HealthCheck()
     {
         return Ok(new { message = "API is running" });
+    }
+    
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync("Cookies"); // removes the auth cookie
+        return Ok(new { message = "User logged out" });
     }
 }
