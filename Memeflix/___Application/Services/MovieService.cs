@@ -37,29 +37,6 @@ public class MovieService : IMovieService
             throw new ArgumentNullException(nameof(file));
         }
 
-        // Get video duration
-        long durationMs = 0;
-
-        if (movieFile != null || movieFile.Length != 0)
-        {
-            // Create a temporary file path
-            var tempFilePath = Path.Combine(Path.GetTempPath(), movieFile.FileName);
-            // Save the file to a temporary location
-            using (var fileStream = new FileStream(tempFilePath, FileMode.Create))
-            {
-                await movieFile.CopyToAsync(fileStream);
-            }
-
-            // Use ffprobe to get video duration
-            var ffProbe = new FFProbe();
-            var videoInfo = ffProbe.GetMediaInfo(tempFilePath);
-
-            // Optionally delete the temp file after usage
-            File.Delete(tempFilePath);
-
-            durationMs = (long)videoInfo.Duration.TotalMilliseconds;
-        }
-
         using var stream = movieFile.OpenReadStream();
         var metadata = new MovieMetadata(
             index: ObjectId.GenerateNewId().ToString(),
@@ -67,7 +44,7 @@ public class MovieService : IMovieService
             title: file.Title,
             uploadDate: DateTime.Now,
             description: file.Description,
-            duration: durationMs,
+            size: movieFile.Length,
             genre: file.Genre,
             chunkSize: 255 * 1024,
             metadata: new Dictionary<string, object>()
