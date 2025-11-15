@@ -1,0 +1,75 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\jakob\\source\\repos\\Memeflix\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{987004C0-EFA6-4D91-B0E5-9924D1DB8257}|Memeflix\\Memeflix.csproj|c:\\users\\jakob\\source\\repos\\memeflix\\memeflix\\_external\\api\\apicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{987004C0-EFA6-4D91-B0E5-9924D1DB8257}|Memeflix\\Memeflix.csproj|solutionrelative:memeflix\\_external\\api\\apicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{987004C0-EFA6-4D91-B0E5-9924D1DB8257}|Memeflix\\Memeflix.csproj|c:\\users\\jakob\\source\\repos\\memeflix\\memeflix\\wwwroot\\memeflix.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{987004C0-EFA6-4D91-B0E5-9924D1DB8257}|Memeflix\\Memeflix.csproj|solutionrelative:memeflix\\wwwroot\\memeflix.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{987004C0-EFA6-4D91-B0E5-9924D1DB8257}|Memeflix\\Memeflix.csproj|c:\\users\\jakob\\source\\repos\\memeflix\\memeflix\\_external\\movierepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{987004C0-EFA6-4D91-B0E5-9924D1DB8257}|Memeflix\\Memeflix.csproj|solutionrelative:memeflix\\_external\\movierepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "memeflix.html",
+              "DocumentMoniker": "C:\\Users\\jakob\\source\\repos\\Memeflix\\Memeflix\\wwwroot\\memeflix.html",
+              "RelativeDocumentMoniker": "Memeflix\\wwwroot\\memeflix.html",
+              "ToolTip": "C:\\Users\\jakob\\source\\repos\\Memeflix\\Memeflix\\wwwroot\\memeflix.html",
+              "RelativeToolTip": "Memeflix\\wwwroot\\memeflix.html",
+              "ViewState": "AgIAAIQAAAAAAAAAAAAgwIUAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-11-14T13:16:10.697Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "APIController.cs",
+              "DocumentMoniker": "C:\\Users\\jakob\\source\\repos\\Memeflix\\Memeflix\\_External\\API\\APIController.cs",
+              "RelativeDocumentMoniker": "Memeflix\\_External\\API\\APIController.cs",
+              "ToolTip": "C:\\Users\\jakob\\source\\repos\\Memeflix\\Memeflix\\_External\\API\\APIController.cs*",
+              "RelativeToolTip": "Memeflix\\_External\\API\\APIController.cs*",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAQwGQAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-14T12:25:40.183Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MovieRepo.cs",
+              "DocumentMoniker": "C:\\Users\\jakob\\source\\repos\\Memeflix\\Memeflix\\_External\\MovieRepo.cs",
+              "RelativeDocumentMoniker": "Memeflix\\_External\\MovieRepo.cs",
+              "ToolTip": "C:\\Users\\jakob\\source\\repos\\Memeflix\\Memeflix\\_External\\MovieRepo.cs",
+              "RelativeToolTip": "Memeflix\\_External\\MovieRepo.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-14T12:25:31.567Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
