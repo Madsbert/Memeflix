@@ -149,15 +149,15 @@
                             //full string response
                             const recommendation = aiData.recommendation;
 
-                            const recomendationsArray = recommendation.split('\n').filter(line => line.trim() !== '').slice(0, 3);
+                            const recommendationsArray = recommendation.split('\n').filter(line => line.trim() !== '').slice(0, 3);
 
-                            const partsToUse = recomendationsArray.length >= 3 ? recomendationsArray : parts;
+                            const partsToUse = recommendationsArray.length >= 3 ? recommendationsArray : recommendationsArray;
 
                             // Update the three paragraph elements
                             aiOutput1Element.textContent = partsToUse[0] || '';
                             aiOutput2Element.textContent = partsToUse[1] || '';
                             aiOutput3Element.textContent = partsToUse[2] || '';
-                            
+
                         })
                         .catch(error => {
                             console.error('Error fetching AI recommendation:', error);
