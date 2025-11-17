@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  memeflix:
+    build:
+      context: ./Memeflix
+      dockerfile: Dockerfile
+    ports:
+      - "5163:5163"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - OLLAMA_HOST=http://ollama:11434
+      - ConnectionStrings__MongoDB=mongodb://mongodb:27017
+      - ASPNETCORE_URLS=http://+:5163
+    depends_on:
+      - ollama
+      - mongodb
+
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    command: [ "serve", "ollama run gemma3:1b" ]
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  ollama:
+  mongodb_data:

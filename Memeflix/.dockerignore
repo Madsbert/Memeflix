@@ -1,0 +1,9 @@
+bin/
+obj/
+*.user
+.vscode/
+.git/
+*.tmp
+*.log
+node_modules/
+.DS_Store
