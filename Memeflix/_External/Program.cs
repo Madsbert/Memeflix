@@ -43,6 +43,12 @@ builder.Services.Configure<FormOptions>(options =>
     options.MultipartBodyLengthLimit = maxUploadBytes; // total body size
 });
 
+// Add environment-specific configuration
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
 // MongoDB Configuration
 var mongoConn = builder.Configuration.GetConnectionString("MongoDB");
 var mongoClient = new MongoClient(mongoConn);
