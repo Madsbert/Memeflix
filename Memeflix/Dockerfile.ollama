@@ -1,0 +1,17 @@
+FROM ollama/ollama:latest
+
+# Create an init script that starts server AND pulls models
+RUN printf '%s\n' \
+    '#!/bin/sh' \
+    'set -e' \
+    'ollama serve &' \
+    'until ollama list >/dev/null 2>&1; do sleep 1; done' \
+    'ollama pull gemma3:1b' \
+    'wait' \
+    > /init.sh \
+    && chmod +x /init.sh
+
+EXPOSE 11434
+
+# Override base image entrypoint (which is "ollama")
+ENTRYPOINT ["/init.sh"]

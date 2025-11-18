@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   memeflix:
@@ -17,12 +17,16 @@ services:
       - mongodb
 
   ollama:
-    image: ollama/ollama
+    build:
+      context: .
+      dockerfile: Memeflix/Dockerfile.ollama
     ports:
       - "11434:11434"
     volumes:
-      - ollama:/root/.ollama
-    command: [ "serve", "ollama run gemma3:1b" ]
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    restart: unless-stopped
 
   mongodb:
     image: mongo:latest
@@ -32,5 +36,5 @@ services:
       - mongodb_data:/data/db
 
 volumes:
-  ollama:
+  ollama_data:
   mongodb_data:

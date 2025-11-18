@@ -87,7 +87,7 @@ public class APIController : ControllerBase
     public async Task<IActionResult> GetAIRecommendation(string title, string genre)
     {
         var ollamaHost = Environment.GetEnvironmentVariable("OLLAMA_HOST") ?? "http://localhost:11434";
-        var ollamaClient = new OllamaApiClient(ollamaHost.ToString(), "gemma3:1b");
+        var ollamaClient = new OllamaApiClient(ollamaHost, "gemma3:1b");
         try
         {
             var prompt = $"Provide 3 very brief movie recommendations similar to '{title}' in the genre '{genre}'.\n" +
